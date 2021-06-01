@@ -38,7 +38,7 @@ namespace RGBPalette.Plugin
 			}
 			//vector = UICamera.currentCamera.WorldToScreenPoint(this.colorPaletteManager.gameObject.transform.position);
 			//clientRect = new Rect((float)((int)vector.x + 330), (float)(-(float)((int)vector.y) + 650), 200f, 280f);
-			GUI.Window(6910, clientRect, new GUI.WindowFunction(this.DrawWindow), "Color palette");
+			clientRect=GUI.Window(6910, clientRect, new GUI.WindowFunction(this.DrawWindow), "Color palette");
 		}
 
 		public void OnDisable()
