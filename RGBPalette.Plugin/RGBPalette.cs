@@ -27,14 +27,17 @@ namespace RGBPalette.Plugin
 			harmony=Harmony.CreateAndPatchAll(typeof(Patcher));
 		}
 
+		static Vector3 vector;//= UICamera.currentCamera.WorldToScreenPoint(this.colorPaletteManager.gameObject.transform.position);
+		static Rect clientRect;// = new Rect((float)((int)vector.x + 330), (float)(-(float)((int)vector.y) + 650), 200f, 280f);
+
 		private void OnGUI()
 		{
 			if (!this.visible || colorPaletteManager ==null)
 			{
 				return;
 			}
-			Vector3 vector = UICamera.currentCamera.WorldToScreenPoint(this.colorPaletteManager.gameObject.transform.position);
-			Rect clientRect = new Rect((float)((int)vector.x + 330), (float)(-(float)((int)vector.y) + 650), 200f, 280f);
+			//vector = UICamera.currentCamera.WorldToScreenPoint(this.colorPaletteManager.gameObject.transform.position);
+			//clientRect = new Rect((float)((int)vector.x + 330), (float)(-(float)((int)vector.y) + 650), 200f, 280f);
 			GUI.Window(6910, clientRect, new GUI.WindowFunction(this.DrawWindow), "Color palette");
 		}
 
@@ -47,7 +50,7 @@ namespace RGBPalette.Plugin
 		{
 			Color color = this.HSLToRGB(this.sliderHue.value, this.sliderChroma.value, this.sliderBrightness.value);
 			Color col = new Color(color.r, color.g, color.b);
-			GUILayout.BeginArea(new Rect(10f, 30f, 180f, 250f));
+			//GUILayout.BeginArea(new Rect(10f, 30f, 180f, 250f));
 			GUILayout.BeginVertical(new GUILayoutOption[0]);
 			this.DrawSlider("R", () => this.Round(col.r * 255f), delegate(int r)
 			{
@@ -62,11 +65,13 @@ namespace RGBPalette.Plugin
 				col.b = (float)b / 255f;
 			}, 0, 255);
 			GUILayout.EndVertical();
-			GUILayout.EndArea();
+			//GUILayout.EndArea();
 			if (col != color)
 			{
 				this.SetColor(col);
 			}
+			GUI.DragWindow();
+			GUI.enabled = true;
 		}
 
 		private int Round(float f)
@@ -177,6 +182,8 @@ namespace RGBPalette.Plugin
 			RGBPalette.Instance.sliderChroma = UTY.GetChildObject(uiManager.gameObject, "ColorAdjustment/Saturation/SatSlider", false).GetComponent<UISlider>();
 			RGBPalette.Instance.sliderBrightness = UTY.GetChildObject(uiManager.gameObject, "ColorAdjustment/Brightness/BriSlider", false).GetComponent<UISlider>();
 			RGBPalette.Instance.visible = true;
+			vector = UICamera.currentCamera.WorldToScreenPoint(RGBPalette.Instance.colorPaletteManager.gameObject.transform.position);
+			clientRect = new Rect((float)((int)vector.x + 330), (float)(-(float)((int)vector.y) + 650), 200f, 100f);
 		}
 
 		public static void OnPaletteClose()
